@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MovieBook - Movie</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+
+    .movie-hero {
+      position: relative;
+      border-radius: 12px;
+      overflow: hidden;
+      margin: 40px auto;
+      color: white;
+      max-width: 1200px;
+    }
+
+    .movie-hero .bg-blur {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-size: cover;
+      background-position: center;
+      filter: blur(10px);
+      z-index: 1;
+    }
+
+    .movie-hero .overlay {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.65);
+      z-index: 2;
+    }
+
+    .movie-hero .content {
+      position: relative;
+      z-index: 3;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 2rem;
+      padding: 2.5rem;
+    }
+
+    .movie-hero img {
+      width: 180px;
+      border-radius: 10px;
+    }
+
+    .movie-meta p {
+      margin: 4px 0;
+      font-size: 1rem;
+    }
+
+    .date-btns button {
+      border: none;
+      background: #e0e0e0;
+      padding: 10px 16px;
+      margin: 5px;
+      border-radius: 6px;
+      font-weight: 500;
+    }
+
+    .date-btns .active {
+      background: #0066cc;
+      color: white;
+    }
+
+    .btn-primary {
+      background-color: #0066cc;
+      border: none;
+    }
+
+    .btn-primary:hover {
+      background-color: #005bb5;
+    }
+  </style>
+</head>
+<body>
+  <!-- Movie Hero Section -->
+  <div class="movie-hero" id="hero">
+    <div class="bg-blur" id="bg-blur"></div>
+    <div class="overlay"></div>
+    <div class="content">
+      <img id="poster" src="" alt="Poster" />
+      <div>
+        <h2 id="movie-title">Loading…</h2>
+        <div class="movie-meta">
+          <p><strong>Languages:</strong> <span id="lang"></span></p>
+          <p><strong>Runtime:</strong> <span id="runtime"></span></p>
+          <p><strong>Genres:</strong> <span id="genre"></span></p>
+          <p><strong>Rating:</strong> <span id="rating"></span></p>
+          <p><strong>Release Date:</strong> <span id="release"></span></p>
+          <p class="text-warning"><span id="votes"></span> Votes</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- City & Showtimes -->
+  <div class="container">
+    <div class="mb-4">
+      <label for="city-select" class="form-label fw-bold">Select City</label>
+      <select id="city-select" class="form-select w-50">
+        <option selected disabled>Choose city</option>
+        <option>Mumbai</option>
+        <option>Delhi</option>
+        <option>Bangalore</option>
+        <option>Hyderabad</option>
+        <option>Kolkata</option>
+        <option>Chennai</option>
+        <option>Pune</option>
+        <option>Ahmedabad</option>
+        <option>Chandigarh</option>
+        <option>Jaipur</option>
+      </select>
+    </div>
+
+    <label class="form-label fw-bold">Select Date</label>
+    <div class="date-btns mb-3" id="date-buttons"></div>
+
+    <h5 class="fw-bold">Available Showtimes</h5>
+    <div id="showtimes"></div>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(location.search);
+    const movie = params.get('movie');
+
+    const movieData = {
+      raid2: {
+        title: 'Raid 2',
+        poster: 'photos/raid2.png',
+        lang: 'Hindi, Tamil',
+        runtime: '2h 40m',
+        genre: 'Drama / Thriller',
+        rating: '8.3/10',
+        release: '25 April, 2025',
+        votes: '6.2K'
+      },
+      bhoothnath: {
+        title: 'The Bhoothnath',
+        poster: 'photos/bhootni.png',
+        lang: 'Hindi',
+        runtime: '2h 15m',
+        genre: 'Comedy / Horror',
+        rating: '7.4/10',
+        release: '14 April, 2025',
+        votes: '256'
+      },
+      hit: {
+        title: 'HIT: The Third Case',
+        poster: 'photos/hit3.png',
+        lang: 'Telugu, Tamil, Hindi, Kannada, Malayalam',
+        runtime: '2h 37m',
+        genre: 'Crime, Mystery, Thriller',
+        rating: '9.0/10',
+        release: '1 May, 2025',
+        votes: '22.9K'
+      },
+      retro: {
+        title: 'Retro',
+        poster: 'photos/retro.png',
+        lang: 'Hindi, Tamil',
+        runtime: '2h 18m',
+        genre: 'Action / Thriller',
+        rating: '7.8/10',
+        release: '3 May, 2025',
+        votes: '19.6K'
+      },
+      thunderbolts: {
+        title: 'Thunderbolts',
+        poster: 'photos/thunderstorms.png',
+        lang: 'English',
+        runtime: '2h 10m',
+        genre: 'Action / Adventure / Sci-Fi',
+        rating: '8.4/10',
+        release: '5 May, 2025',
+        votes: '3.6K'
+      }
+    };
+
+    const data = movieData[movie];
+
+    if (data) {
+      document.getElementById('poster').src = data.poster;
+      document.getElementById('bg-blur').style.backgroundImage = `url('${data.poster}')`;
+      document.getElementById('movie-title').textContent = data.title;
+      document.getElementById('lang').textContent = data.lang;
+      document.getElementById('runtime').textContent = data.runtime;
+      document.getElementById('genre').textContent = data.genre;
+      document.getElementById('rating').textContent = data.rating;
+      document.getElementById('release').textContent = data.release;
+      document.getElementById('votes').textContent = data.votes;
+    }
+
+    const today = new Date();
+    const dateButtons = document.getElementById('date-buttons');
+    let selectedDate = null;
+
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(today);
+      d.setDate(today.getDate() + i);
+      const btn = document.createElement('button');
+      const day = d.toLocaleDateString('en-US', { weekday: 'short' }).toUpperCase();
+      const date = String(d.getDate()).padStart(2, '0');
+      const month = d.toLocaleDateString('en-US', { month: 'short' }).toUpperCase();
+      btn.innerHTML = `<div>${day}</div><div>${date} ${month}</div>`;
+      btn.onclick = () => {
+        document.querySelectorAll('.date-btns button').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        selectedDate = `${d.getDate()} ${month} ${d.getFullYear()}`;
+        showShowtimes();
+      };
+      dateButtons.appendChild(btn);
+    }
+
+    function showShowtimes() {
+      const city = document.getElementById('city-select').value;
+      const container = document.getElementById('showtimes');
+      container.innerHTML = '';
+      if (!city || !selectedDate) return;
+
+      ['10:00 AM', '2:00 PM', '6:00 PM', '9:00 PM'].forEach(time => {
+        const btn = document.createElement('button');
+        btn.className = 'btn btn-primary me-2 mb-2';
+        btn.textContent = time;
+        btn.onclick = () => {
+          const url = new URL('seats.html', window.location.href);
+          url.searchParams.set('movie', movie);
+          url.searchParams.set('city', city);
+          url.searchParams.set('time', `${selectedDate} | ${time}`);
+          window.location.href = url;
+        };
+        container.appendChild(btn);
+      });
+    }
+
+    document.getElementById('city-select').onchange = showShowtimes;
+  </script>
+</body>
+</html>
